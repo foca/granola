@@ -25,13 +25,13 @@ end
 setup { Context.new }
 
 test "infers the serializer correctly" do |context|
-  klass = context.send(:_serializer_class_for, @person)
+  klass = Granola::Rack.serializer_class_for(@person)
   assert_equal PersonSerializer, klass
 
-  klass = context.send(:_serializer_class_for, [@person])
+  klass = Granola::Rack.serializer_class_for([@person])
   assert_equal PersonSerializer, klass
 
-  klass = context.send(:_serializer_class_for, [])
+  klass = Granola::Rack.serializer_class_for([])
   assert_equal Granola::Rack::NilClassSerializer, klass
 end
 

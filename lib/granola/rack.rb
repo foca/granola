@@ -4,7 +4,7 @@ require "granola"
 
 module Granola::Rack
   def json(object, with: nil, **json_options)
-    serializer_class = with || _serializer_class_for(object)
+    serializer_class = with || Granola::Rack.serializer_class_for(object)
     method = object.respond_to?(:to_ary) ? :list : :new
     serializer = serializer_class.send(method, object)
 
@@ -30,11 +30,10 @@ module Granola::Rack
     end
   end
 
-  def _serializer_class_for(object)
+  def self.serializer_class_for(object)
     object = object.respond_to?(:to_ary) ? object.to_ary.fetch(0, nil) : object
-    self.class.const_get("#{object.class.name}Serializer")
+    const_get("#{object.class.name}Serializer")
   end
-  private :_serializer_class_for
 
   class NilClassSerializer < Granola::Serializer
     def attributes
