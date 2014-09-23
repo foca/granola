@@ -1,6 +1,7 @@
 require "digest/md5"
 require "time"
 require "granola"
+require "granola/caching"
 
 module Granola::Rack
   def json(object, with: nil, **json_options)
