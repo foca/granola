@@ -1,3 +1,5 @@
+require "granola/helper"
+
 include Granola::Helper
 
 class CustomSerializer < Granola::Serializer

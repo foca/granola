@@ -1,3 +1,5 @@
+require "granola/rack"
+
 StaleCheck = Granola::Rack::StaleCheck
 
 modified_date = Time.at(987654321)

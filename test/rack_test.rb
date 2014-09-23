@@ -1,3 +1,4 @@
+require "granola/rack"
 require "rack/response"
 
 class Context
