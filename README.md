@@ -80,3 +80,8 @@ return a 304 response.
 
 Plus, it sets appropriate `ETag` and `Last-Modified` so your clients can avoid
 hitting the endpoint altogether.
+
+## License
+
+This project is shared under the MIT license. See the attached LICENSE file for
+details.
