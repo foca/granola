@@ -44,4 +44,19 @@ module Granola
 
     include Schema
   end
+
+  # Public: Schema serializer to render your JSON schemas.
+  #
+  # Example:
+  #
+  #   serializer = SchemaSerializer.new(PersonSerializer.schema)
+  #   serializer.to_json
+  class SchemaSerializer < Serializer
+    def attributes
+      {
+        "$schema".freeze => "http://json-schema.org/schema#".freeze,
+        "type".freeze => "object".freeze
+      }.merge(object)
+    end
+  end
 end
