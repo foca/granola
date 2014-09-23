@@ -39,3 +39,8 @@ test "can serialize the schema itself" do
     serializer.attributes["properties"]["age"]
   )
 end
+
+test "serializes the schema with the appropriate MIME type" do
+  serializer = Granola::SchemaSerializer.new(PersonSerializer.schema)
+  assert_equal "application/schema+json", serializer.mime_type
+end

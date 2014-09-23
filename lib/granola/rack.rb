@@ -51,7 +51,7 @@ module Granola::Rack
       res.status = 304
     else
       json_string = serializer.to_json(json_options)
-      res["Content-Type".freeze] = "application/json".freeze
+      res["Content-Type".freeze] = serializer.mime_type
       res["Content-Length".freeze] = json_string.length.to_s
       res.write(json_string)
     end

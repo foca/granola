@@ -58,5 +58,9 @@ module Granola
         "type".freeze => "object".freeze
       }.merge(object)
     end
+
+    def mime_type
+      "application/schema+json".freeze
+    end
   end
 end
