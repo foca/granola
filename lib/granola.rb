@@ -23,7 +23,10 @@ module Granola
   end
 
   class List < Serializer
+    attr_reader :item_serializer
+
     def initialize(list, serializer)
+      @item_serializer = serializer
       @list = list.map { |obj| serializer.new(obj) }
     end
 

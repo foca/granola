@@ -1,11 +1,5 @@
 require "rack/response"
 
-class CustomSerializer < Granola::Serializer
-  def attributes
-    { "name" => object.name }
-  end
-end
-
 class Context
   include Granola::Rack
 
@@ -24,20 +18,14 @@ end
 
 setup { Context.new }
 
-test "infers the serializer correctly" do |context|
-  klass = Granola::Rack.serializer_class_for(@person)
-  assert_equal PersonSerializer, klass
-
-  klass = Granola::Rack.serializer_class_for([@person])
-  assert_equal PersonSerializer, klass
-
-  klass = Granola::Rack.serializer_class_for([])
-  assert_equal Granola::Rack::NilClassSerializer, klass
-end
-
 test "adds the JSON body to the response" do |context|
   context.json(@person)
   assert_equal [%q({"name":"John Doe","age":25})], context.res.body
+end
+
+test "adds the JSON body of an empty list to the response" do |context|
+  context.json([])
+  assert_equal ["[]"], context.res.body
 end
 
 test "sets the Content-Type and Content-Length on the response" do |context|

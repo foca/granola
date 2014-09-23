@@ -1,13 +1,16 @@
 require "digest/md5"
 require "time"
 require "granola"
+require "granola/helper"
 require "granola/caching"
 
 module Granola::Rack
+  def self.included(base)
+    base.send(:include, Granola::Helper)
+  end
+
   def json(object, with: nil, **json_options)
-    serializer_class = with || Granola::Rack.serializer_class_for(object)
-    method = object.respond_to?(:to_ary) ? :list : :new
-    serializer = serializer_class.send(method, object)
+    serializer = serializer_for(object, with: with)
 
     if serializer.last_modified
       res["Last-Modified".freeze] = serializer.last_modified.httpdate
