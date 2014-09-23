@@ -14,7 +14,7 @@ module Granola
     end
 
     def attributes
-      {}
+      fail NotImplementedError
     end
 
     def to_json(**options)
