@@ -10,12 +10,13 @@ module Granola::Helper
   # Keywords
   #   with: A specific serializer class to use. If this is `nil`,
   #         `Helper.serializer_class_for` will be used to infer the serializer
-  #         class.
+  #         class. This is ignored if `object` is already a Granola::Serializer.
   #
   # Raises NameError if no specific serializer is provided and we fail to infer
   #   one for this object.
   # Returns an instance of a Granola::Serializer subclass.
   def serializer_for(object, with: nil)
+    return object if Granola::Serializer === object
     serializer_class = with || Granola::Helper.serializer_class_for(object)
     method = object.respond_to?(:to_ary) ? :list : :new
     serializer_class.send(method, object)

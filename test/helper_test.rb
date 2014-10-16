@@ -44,3 +44,15 @@ test "#serializer_for handles empty lists automatically" do
   assert serializer.is_a?(Granola::List)
   assert_equal Granola::Helper::NilClassSerializer, serializer.item_serializer
 end
+
+test "#serializer_for accepts a Granola::Serializer" do |person|
+  serializer = PersonSerializer.new(person)
+  assert_equal serializer, serializer_for(serializer)
+end
+
+test "#serializer_for ignores `with` when passed a serializer" do |person|
+  expected = PersonSerializer.new(person)
+  actual = serializer_for(expected, with: CustomSerializer)
+  assert_equal expected, actual
+  assert PersonSerializer === actual
+end
