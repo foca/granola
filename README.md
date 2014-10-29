@@ -51,22 +51,33 @@ serializer.to_json #=> '[{"name":"John Doe",...},{...}]'
 
 ## Rack Helpers
 
-If your application is based on rack, you have a `Rack::Response` called `res`
-in your context, and you have an `env` method that returns the Rack env hash,
-you can simply `include Granola::Rack` and you get access to the following
-interface:
+If your application is based on Rack, you can simply `include Granola::Rack` and
+you get access to the following interface:
 
 ``` ruby
 json(person) #=> This will try to infer PersonSerializer from a Person instance
 json(person, with: AnotherSerializer)
 ```
 
-*NOTE*: This works out of the box in frameworks like [Cuba][] or [Roda][]. You
-might need to provide glue code to make `res` and/or `env` available in other
-frameworks.
+*NOTE* The method relies on being an `env` method that returns the Rack
+environment Hash in the same context where you call the method. See [the
+documentation](./lib/granola/rack.rb) for further details.
 
-[Cuba]: https://github.com/soveran/cuba
-[Roda]: https://github.com/jeremyevans/roda
+This method returns a Rack response tuple that you can use like so (this example
+uses [Cuba][], but similar code will work for other frameworks):
+
+``` ruby
+Cuba.plugin Granola::Rack
+
+Cuba.define do
+  on get, "users/:id" do |id|
+    user = User[id]
+    halt json(user)
+  end
+end
+```
+
+[Cuba]: http://cuba.is
 
 ## Caching
 

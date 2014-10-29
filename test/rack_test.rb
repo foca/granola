@@ -5,11 +5,9 @@ class Context
   include Granola::Rack
 
   attr_reader :env
-  attr_reader :res
 
   def initialize(env = {})
     @env = env
-    @res = Rack::Response.new
   end
 end
 
@@ -19,30 +17,35 @@ end
 
 setup { Context.new }
 
+test "sets the status to 200 for a stale response" do |context|
+  response = context.json(@person)
+  assert_equal 200, response[0]
+end
+
 test "adds the JSON body to the response" do |context|
-  context.json(@person)
-  assert_equal [%q({"name":"John Doe","age":25})], context.res.body
+  response = context.json(@person)
+  assert_equal [%q({"name":"John Doe","age":25})], response[2]
 end
 
 test "adds the JSON body of an empty list to the response" do |context|
-  context.json([])
-  assert_equal ["[]"], context.res.body
+  response = context.json([])
+  assert_equal ["[]"], response[2]
 end
 
 test "sets the Content-Type and Content-Length on the response" do |context|
-  context.json(@person)
-  assert_equal "application/json", context.res.headers["Content-Type"]
-  assert_equal "28", context.res.headers["Content-Length"]
+  response = context.json(@person)
+  assert_equal "application/json", response[1]["Content-Type"]
+  assert_equal "28", response[1]["Content-Length"]
 end
 
 test "sets the Last-Modified and ETag headers" do |context|
-  context.json(@person)
+  response = context.json(@person)
 
   expected_etag = Digest::MD5.hexdigest("John Doe|987654321")
-  assert_equal expected_etag, context.res.headers["ETag"]
+  assert_equal expected_etag, response[1]["ETag"]
 
   expected_last_modified = Time.at(987654321).httpdate
-  assert_equal expected_last_modified, context.res.headers["Last-Modified"]
+  assert_equal expected_last_modified, response[1]["Last-Modified"]
 end
 
 setup do
@@ -51,17 +54,17 @@ setup do
 end
 
 test "doesn't set a body for a fresh response" do |context|
-  context.json(@person)
-  assert_equal [], context.res.body
+  response = context.json(@person)
+  assert_equal [], response[2]
 end
 
 test "sets the status to 304 for a fresh response" do |context|
-  context.json(@person)
-  assert_equal 304, context.res.status
+  response = context.json(@person)
+  assert_equal 304, response[0]
 end
 
 test "doesn't set Content-* for a fresh response" do |context|
-  context.json(@person)
-  assert context.res.headers["Content-Type"].nil?
-  assert context.res.headers["Content-Length"].nil?
+  response = context.json(@person)
+  assert response[1]["Content-Type"].nil?
+  assert response[1]["Content-Length"].nil?
 end

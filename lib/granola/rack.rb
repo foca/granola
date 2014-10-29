@@ -16,9 +16,8 @@ module Granola::Rack
   # `ETag` headers if appropriate, and of controlling whether the object should
   # be rendered at all or not (issuing a 304 response in this case).
   #
-  # This expects the class mixing in this module to implement two methods:
-  # `res`, that should be a Rack::Response, and `env`, that should be a Rack
-  # environment hash.
+  # This expects the class mixing in this module to implement an `env` method,
+  # that should be a Rack environment Hash.
   #
   # object - An object to serialize into JSON.
   #
@@ -31,16 +30,17 @@ module Granola::Rack
   #
   # Raises NameError if no specific serializer is provided and we fail to infer
   #   one for this object.
-  # Returns an instance of a Granola::Serializer subclass.
+  # Returns a Rack response tuple.
   def json(object, with: nil, **json_options)
     serializer = serializer_for(object, with: with)
+    headers = {}
 
     if serializer.last_modified
-      res["Last-Modified".freeze] = serializer.last_modified.httpdate
+      headers["Last-Modified".freeze] = serializer.last_modified.httpdate
     end
 
     if serializer.cache_key
-      res["ETag".freeze] = Digest::MD5.hexdigest(serializer.cache_key)
+      headers["ETag".freeze] = Digest::MD5.hexdigest(serializer.cache_key)
     end
 
     stale_check = StaleCheck.new(
@@ -48,12 +48,12 @@ module Granola::Rack
     )
 
     if stale_check.fresh?
-      res.status = 304
+      [304, headers, []]
     else
       json_string = serializer.to_json(json_options)
-      res["Content-Type".freeze] = serializer.mime_type
-      res["Content-Length".freeze] = json_string.length.to_s
-      res.write(json_string)
+      headers["Content-Type".freeze] = serializer.mime_type
+      headers["Content-Length".freeze] = json_string.length.to_s
+      [200, headers, [json_string]]
     end
   end
 
