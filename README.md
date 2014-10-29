@@ -1,5 +1,8 @@
 # Granola, a JSON serializer
 
+![A tasty bowl of Granola](https://cloud.githubusercontent.com/assets/437/4827156/9e8d33da-5f76-11e4-8574-7803e84845f2.JPG)
+
+
 Granola aims to provide a simple interface to generate JSON responses based on
 your application's domain models. It doesn't make assumptions about anything and
 gets out of your way. You just write plain ruby.
