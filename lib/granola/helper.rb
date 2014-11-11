@@ -32,7 +32,10 @@ module Granola::Helper
   # Returns a Class.
   def self.serializer_class_for(object)
     object = object.respond_to?(:to_ary) ? object.to_ary.fetch(0, nil) : object
-    const_get("#{object.class.name}Serializer")
+    name = object.class.name
+    Object.const_get("%sSerializer" % name)
+  rescue NameError
+    const_get("%sSerializer" % name)
   end
 
   # Internal: Null serializer that transparently handles rendering `nil` in case

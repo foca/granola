@@ -8,6 +8,14 @@ class CustomSerializer < Granola::Serializer
   end
 end
 
+module Namespaced
+  class Model
+  end
+
+  class ModelSerializer < Granola::Serializer
+  end
+end
+
 setup do
   Person.new("John Doe", 25, Time.at(987654321))
 end
@@ -21,6 +29,9 @@ test "infers the serializer correctly" do |person|
 
   klass = Granola::Helper.serializer_class_for([])
   assert_equal Granola::Helper::NilClassSerializer, klass
+
+  klass = Granola::Helper.serializer_class_for(Namespaced::Model.new)
+  assert_equal Namespaced::ModelSerializer, klass
 end
 
 test "#serializer_for infers the serializer class" do |person|
