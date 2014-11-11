@@ -22,6 +22,11 @@ test "sets the status to 200 for a stale response" do |context|
   assert_equal 200, response[0]
 end
 
+test "sets the status to a user-defined value for a stale response" do |context|
+  response = context.json(@person, status: 400)
+  assert_equal 400, response[0]
+end
+
 test "adds the JSON body to the response" do |context|
   response = context.json(@person)
   assert_equal [%q({"name":"John Doe","age":25})], response[2]

@@ -25,13 +25,15 @@ module Granola::Rack
   #   with:           A specific serializer class to use. If this is `nil`,
   #                   `Helper.serializer_class_for` will be used to infer the
   #                   serializer class.
+  #   status:         The HTTP status to return on stale responses. Defaults to
+  #                   `200`.
   #   **json_options: Any other keywords passed will be forwarded to the
   #                   serializer's `#to_json` call.
   #
   # Raises NameError if no specific serializer is provided and we fail to infer
   #   one for this object.
   # Returns a Rack response tuple.
-  def json(object, with: nil, **json_options)
+  def json(object, with: nil, status: 200, **json_options)
     serializer = serializer_for(object, with: with)
     headers = {}
 
@@ -55,7 +57,7 @@ module Granola::Rack
       json_string = serializer.to_json(json_options)
       headers["Content-Type".freeze] = serializer.mime_type
       headers["Content-Length".freeze] = json_string.length.to_s
-      [200, headers, [json_string]]
+      [status, headers, [json_string]]
     end
   end
 
