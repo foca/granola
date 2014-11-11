@@ -2,9 +2,9 @@ require "granola/rack"
 
 StaleCheck = Granola::Rack::StaleCheck
 
-modified_date = Time.at(987654321)
-modified_before = Time.at(987654321 - 1)
-modified_after = Time.at(987654321 + 1)
+modified_before = Time.at(987654321 - 1).httpdate
+modified_date = Time.at(987654321).httpdate
+modified_after = Time.at(987654321 + 1).httpdate
 
 scope do # For missing information (either headers or serializer caching data)
   test "stale check is stale if last_modified and cache_key are nil" do

@@ -44,7 +44,9 @@ module Granola::Rack
     end
 
     stale_check = StaleCheck.new(
-      env, last_modified: serializer.last_modified, etag: serializer.cache_key
+      env,
+      last_modified: headers["Last-Modified".freeze],
+      etag: headers["ETag".freeze]
     )
 
     if stale_check.fresh?
@@ -109,8 +111,7 @@ module Granola::Rack
     # Returns Boolean.
     def fresh_by_time?
       return false unless env.key?(IF_MODIFIED_SINCE) && !last_modified.nil?
-      if_modified_since = Time.parse(env.fetch(IF_MODIFIED_SINCE))
-      last_modified <= if_modified_since
+      Time.parse(last_modified) <= Time.parse(env.fetch(IF_MODIFIED_SINCE))
     end
 
     # Internal: Checks if a request is fresh by etag, if applicable, by
