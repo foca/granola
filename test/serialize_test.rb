@@ -50,3 +50,14 @@ scope do
     assert_equal %q|[{"a":1,"b":2},{"a":3,"b":4}]|, serializer.to_json
   end
 end
+
+scope do
+  prepare do
+    Granola.json = ->(obj, **opts) { "success!" }
+  end
+
+  test "serializes with a custom json backend" do
+    serializer = OpenStructSerializer.new(OpenStruct.new)
+    assert_equal "success!", serializer.to_json
+  end
+end

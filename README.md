@@ -30,16 +30,13 @@ PersonSerializer.new(person).to_json #=> '{"name":"John Doe",...}'
 ## JSON serialization
 
 Granola doesn't make assumptions about your code, so it shouldn't depend on a
-specific JSON backend. It uses [MultiJson][] to serialize your objects with your
-favorite backend.
+specific JSON backend. It defaults to the native JSON backend, but you're free
+to change it. For example, if you were using [Yajl][]:
 
-Try to avoid using the default, which is the `stdlib`'s pure-ruby JSON library,
-since it's slow. If in doubt, I like [Yajl][].
+``` ruby
+Granola.json = ->(obj, **opts) { Yajl::Encoder.encode(obj, opts) }
+```
 
-If you want to pass options to `MultiJson` (like `pretty: true`), any keywords
-passed to `#to_json` will be forwarded to `MultiJson.dump`.
-
-[MultiJson]: https://github.com/intridea/multi_json
 [Yajl]: https://github.com/brianmario/yajl-ruby
 
 ## Handling lists of models

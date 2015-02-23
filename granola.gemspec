@@ -20,9 +20,7 @@ Gem::Specification.new do |s|
     "lib/granola/caching.rb",
   ]
 
-  s.add_dependency "multi_json", "~> 1.10"
-
   s.add_development_dependency "cutest", "~> 1.2"
-  s.add_development_dependency "rack", "~> 1.5"
+  s.add_development_dependency "rack", "~> 2.5"
 end
 
