@@ -89,10 +89,9 @@ your serializer's `last_modified`.  Granola will use this to generate the
 appropriate `Last-Modified` HTTP header.  Likewise, the result of `cache_key`
 will be MD5d and set as the response's `ETag` header.
 
-If you do this, you should also make sure that the
-[`Rack::ConditionalGet`][conditional-get] is in your Rack stack, as it will use
-these headers to avoid generating the JSON response altogether. For example,
-using Cuba:
+If you do this, you should also make sure that the [`Rack::ConditionalGet`][cg]
+middleware is in your Rack stack, as it will use these headers to avoid
+generating the JSON response altogether. For example, using Cuba:
 
 ``` ruby
 class UserSerializer < Granola::Serializer
@@ -122,7 +121,7 @@ end
 This will avoid generating the JSON response altogether if the user sends the
 appropriate `If-Modified-Since` or `If-None-Match` headers.
 
-[conditional-get]: http://www.rubydoc.info/github/rack/rack/Rack/ConditionalGet
+[cg]: http://www.rubydoc.info/github/rack/rack/Rack/ConditionalGet
 
 ## License
 
