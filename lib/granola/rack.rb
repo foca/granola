@@ -34,10 +34,8 @@ module Granola::Rack
   # Raises NameError if no specific serializer is provided and we fail to infer
   #   one for this object.
   # Returns a Rack response tuple.
-  def json(object, with: nil, status: 200, response: nil, **json_options)
+  def json(object, with: nil, status: 200, response: Rack::Response.new, **json_options)
     serializer = serializer_for(object, with: with)
-    response ||= Rack::Response.new
-    response.status = status
 
     if serializer.last_modified
       response["Last-Modified".freeze] = serializer.last_modified.httpdate
