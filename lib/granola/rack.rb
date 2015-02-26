@@ -1,5 +1,6 @@
 require "digest/md5"
 require "time"
+require "rack"
 require "granola"
 require "granola/helper"
 require "granola/caching"
@@ -33,32 +34,32 @@ module Granola::Rack
   # Raises NameError if no specific serializer is provided and we fail to infer
   #   one for this object.
   # Returns a Rack response tuple.
-  def json(object, with: nil, status: 200, **json_options)
+  def json(object, with: nil, status: 200, response: Rack::Response.new, **json_options)
     serializer = serializer_for(object, with: with)
-    headers = {}
 
     if serializer.last_modified
-      headers["Last-Modified".freeze] = serializer.last_modified.httpdate
+      response["Last-Modified".freeze] = serializer.last_modified.httpdate
     end
 
     if serializer.cache_key
-      headers["ETag".freeze] = Digest::MD5.hexdigest(serializer.cache_key)
+      response["ETag".freeze] = Digest::MD5.hexdigest(serializer.cache_key)
     end
 
     stale_check = StaleCheck.new(
       env,
-      last_modified: headers["Last-Modified".freeze],
-      etag: headers["ETag".freeze]
+      last_modified: response["Last-Modified".freeze],
+      etag: response["ETag".freeze]
     )
 
     if stale_check.fresh?
-      [304, headers, []]
+      response.status = 304
     else
       json_string = serializer.to_json(json_options)
-      headers["Content-Type".freeze] = serializer.mime_type
-      headers["Content-Length".freeze] = json_string.length.to_s
-      [status, headers, [json_string]]
+      response["Content-Type".freeze] = serializer.mime_type
+      response["Content-Length".freeze] = json_string.length.to_s
+      response.write json_string
     end
+    response.finish
   end
 
   # Internal: Check whether a request is fresh or stale by both modified time
