@@ -29,12 +29,12 @@ end
 
 test "adds the JSON body to the response" do |context|
   response = context.json(@person)
-  assert_equal [%q({"name":"John Doe","age":25})], response[2]
+  assert_equal [%q({"name":"John Doe","age":25})], response[2].body
 end
 
 test "adds the JSON body of an empty list to the response" do |context|
   response = context.json([])
-  assert_equal ["[]"], response[2]
+  assert_equal ["[]"], response[2].body
 end
 
 test "sets the Content-Type and Content-Length on the response" do |context|
@@ -51,6 +51,13 @@ test "sets the Last-Modified and ETag headers" do |context|
 
   expected_last_modified = Time.at(987654321).httpdate
   assert_equal expected_last_modified, response[1]["Last-Modified"]
+end
+
+test "preserve response headers" do |context|
+  res = Rack::Response.new
+  res["Other-Header"] = "meow"
+  response = context.json(@person, response: res)
+  assert_equal response[1]["Other-Header"], "meow"
 end
 
 setup do
@@ -73,3 +80,4 @@ test "doesn't set Content-* for a fresh response" do |context|
   assert response[1]["Content-Type"].nil?
   assert response[1]["Content-Length"].nil?
 end
+
