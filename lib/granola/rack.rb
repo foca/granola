@@ -15,6 +15,11 @@ module Granola::Rack
   # Granola::Serializer. This takes care of setting the `Last-Modified` and
   # `ETag` headers if appropriate.
   #
+  # You can customize the response tuple by passing the status and the default
+  # headers, as in the following example:
+  #
+  #   json(user, status: 400, headers: { "X-Error" => "Boom!" })
+  #
   # object - An object to serialize into JSON.
   #
   # Keywords:
@@ -23,15 +28,15 @@ module Granola::Rack
   #                   serializer class.
   #   status:         The HTTP status to return on stale responses. Defaults to
   #                   `200`.
+  #   headers:        A Hash of default HTTP headers. Defaults to an empty Hash.
   #   **json_options: Any other keywords passed will be forwarded to the
   #                   serializer's `#to_json` call.
   #
   # Raises NameError if no specific serializer is provided and we fail to infer
   #   one for this object.
   # Returns a Rack response tuple.
-  def json(object, with: nil, status: 200, **json_options)
+  def json(object, with: nil, status: 200, headers: {}, **json_options)
     serializer = serializer_for(object, with: with)
-    headers = {}
 
     if serializer.last_modified
       headers["Last-Modified".freeze] = serializer.last_modified.httpdate

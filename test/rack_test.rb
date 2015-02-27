@@ -50,3 +50,11 @@ test "sets the Last-Modified and ETag headers" do |context|
   expected_last_modified = Time.at(987654321).httpdate
   assert_equal expected_last_modified, headers["Last-Modified"]
 end
+
+test "allows passing default headers" do |context|
+  default_headers = { "Other-Header" => "Meow" }
+  status, headers, body = context.json(@person, headers: default_headers)
+
+  assert_equal "application/json", headers["Content-Type"]
+  assert_equal "Meow", headers["Other-Header"]
+end
