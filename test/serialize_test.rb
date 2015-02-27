@@ -63,6 +63,37 @@ scope do
 end
 
 scope do
+  class MultipleObjectSerializer < Granola::Serializer
+    attr_reader :another
+
+    def initialize(object, another)
+      super(object)
+      @another = another
+    end
+
+    def attributes
+      { "foo" => object.foo, "bar" => another.bar }
+    end
+  end
+
+  test "can modify the serializer's initialize method" do
+    foo = OpenStruct.new(foo: 1)
+    bar = OpenStruct.new(bar: 2)
+
+    serializer = MultipleObjectSerializer.new(foo, bar)
+    assert_equal %q|{"foo":1,"bar":2}|, serializer.to_json
+  end
+
+  test "can pass multiple arguments even if using a list" do
+    foos = [OpenStruct.new(foo: 1), OpenStruct.new(foo: 2)]
+    bar = OpenStruct.new(bar: 3)
+
+    serializer = MultipleObjectSerializer.list(foos, bar)
+    assert_equal %q|[{"foo":1,"bar":3},{"foo":2,"bar":3}]|, serializer.to_json
+  end
+end
+
+scope do
   prepare do
     Granola.json = ->(obj, **opts) { "success!" }
   end
