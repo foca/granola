@@ -4,6 +4,7 @@ require "jbuilder"
 require "yajl"
 
 MultiJson.use :yajl
+Granola.json = Yajl::Encoder.method(:encode)
 
 Message = Struct.new(
   :content,
