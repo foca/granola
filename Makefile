@@ -1,18 +1,15 @@
-PACKAGES = granola granola-schema
-
-### From here on now, it should be the same for all libraries :)
-
 ifndef GS_NAME
   $(error GS_NAME not set. Have you `gs in` yet?)
 endif
 
+PACKAGES := granola granola-schema
+VERSION_FILE := lib/*/version.rb
+
 DEPS := ${GEM_HOME}/installed
-PACKAGES ?= $(shell basename `pwd`)
-VERSION := $(shell grep VERSION lib/*/version.rb | sed -e 's/VERSION =//' -e 's/[ "]//g')
+VERSION := $(shell grep VERSION $(VERSION_FILE) | sed -e 's/VERSION =//' -e 's/[ "]//g')
 GEMS := $(addprefix pkg/, $(addsuffix -$(VERSION).gem, $(PACKAGES)))
 
-export RUBYOPT=-Ilib
-export RUBYLIB=$RUBYLIB:test
+export RUBYLIB=$RUBYLIB:test:lib
 
 all: test $(GEMS)
 
@@ -25,7 +22,7 @@ clean:
 release: $(GEMS)
 	for gem in $^; do gem push $$gem; done
 
-pkg/%-$(VERSION).gem: %.gemspec lib/*/version.rb
+pkg/%-$(VERSION).gem: %.gemspec $(VERSION_FILE)
 	gem build $<
 	mv $(@F) pkg/
 
