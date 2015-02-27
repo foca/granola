@@ -32,6 +32,6 @@ pkg/%-$(VERSION).gem: %.gemspec lib/*/version.rb
 $(DEPS): $(GEM_HOME) .gems
 	which dep &>/dev/null || gem install dep
 	dep install
-	touch .gs/installed
+	touch $(GEM_HOME)/installed
 
 .PHONY: all test release clean
