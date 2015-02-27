@@ -1,4 +1,4 @@
-# Granola, a JSON serializer
+# Granola, a JSON serializer [![Build Status](https://travis-ci.org/foca/granola.svg?branch=master)](https://travis-ci.org/foca/granola)
 
 ![A tasty bowl of Granola](https://cloud.githubusercontent.com/assets/437/4827156/9e8d33da-5f76-11e4-8574-7803e84845f2.JPG)
 
