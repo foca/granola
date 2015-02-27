@@ -16,7 +16,7 @@ module Granola
     attr_accessor :json
   end
 
-  self.json = ->(obj, **opts) { JSON.dump(obj) }
+  self.json = ->(obj, **opts) { JSON.generate(obj, opts) }
 
   # A Serializer describes how to serialize a certain type of object, by
   # declaring the structure of JSON objects.

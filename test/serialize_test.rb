@@ -52,6 +52,17 @@ scope do
 end
 
 scope do
+  setup do
+    OpenStruct.new(a: 1, b: 2, c: 3)
+  end
+
+  test "allows passing options to the json backend" do |object|
+    serializer = OpenStructSerializer.new(object)
+    assert_equal %q|{"a": 1,"b": 2,"c": 3}|, serializer.to_json(space: " ")
+  end
+end
+
+scope do
   prepare do
     Granola.json = ->(obj, **opts) { "success!" }
   end
