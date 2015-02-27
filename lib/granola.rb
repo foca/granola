@@ -33,7 +33,7 @@ module Granola
     #
     # Returns a Granola::List.
     def self.list(ary)
-      List.new(ary, self)
+      List.new(ary, with: self)
     end
 
     # Public: Initialize the serializer with a given object.
@@ -85,11 +85,14 @@ module Granola
 
     # Public: Instantiate a new list serializer.
     #
-    # list       - An Array-like structure.
-    # serializer - A subclass of Granola::Serializer.
-    def initialize(list, serializer)
-      @item_serializer = serializer
-      @list = list.map { |obj| serializer.new(obj) }
+    # list  - An Array-like structure.
+    #
+    # Keywords:
+    #   with: The subclass of Granola::Serializer to use when serializing
+    #         specific elements in the list.
+    def initialize(list, with: serializer)
+      @item_serializer = with
+      @list = list.map { |obj| @item_serializer.new(obj) }
     end
 
     # Public: Returns an Array of Hashes that can be serialized into JSON.
