@@ -1,0 +1,16 @@
+language: ruby
+script: make
+rvm:
+  - 2.0
+  - 2.1
+  - 2.2
+  - ruby-head
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+install: |
+  gem install dep
+  curl https://raw.githubusercontent.com/tonchis/gst/master/bin/gst > gst
+  chmod +x gst
+  ./gst init
+  source ./gst in
