@@ -34,10 +34,14 @@ specific JSON backend. It defaults to the native JSON backend, but you're free
 to change it. For example, if you were using [Yajl][]:
 
 ``` ruby
-Granola.json = ->(obj, **opts) { Yajl::Encoder.encode(obj, opts) }
+Granola.json = Yajl::Encoder.method(:encode)
 ```
 
+If your project already uses [MultiJson][] then we will default to whatever it's
+using, so you shouldn't worry.
+
 [Yajl]: https://github.com/brianmario/yajl-ruby
+[MultiJson]: https://github.com/intridea/multi_json
 
 ## Handling lists of models
 

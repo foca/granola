@@ -16,7 +16,11 @@ module Granola
     attr_accessor :json
   end
 
-  self.json = ->(obj, **opts) { JSON.generate(obj, opts) }
+  if defined?(MultiJson)
+    self.json = MultiJson.method(:dump)
+  else
+    self.json = JSON.method(:generate)
+  end
 
   # A Serializer describes how to serialize a certain type of object, by
   # declaring the structure of JSON objects.
