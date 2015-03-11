@@ -75,11 +75,12 @@ module Granola
   end
 
   # Internal: The List serializer provides an interface for serializing lists of
-  # objects, wrapping around a specific serializer.
+  # objects, wrapping around a specific serializer. The preferred API for this
+  # is to use `Granola::Serializer.list`.
   #
   # Example:
   #
-  #   serializer = Granola::List.new(people, PersonSerializer)
+  #   serializer = Granola::List.new(people, with: PersonSerializer)
   #   serializer.to_json
   #
   # You should use Serializer.list instead of this class.
