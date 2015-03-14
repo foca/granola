@@ -35,14 +35,19 @@ module Granola::Helper
     name = object.class.name
     Object.const_get("%sSerializer" % name)
   rescue NameError
-    const_get("%sSerializer" % name)
+    case object
+    when NilClass, TrueClass, FalseClass, Numeric, String
+      PrimitiveTypesSerializer
+    else
+      raise
+    end
   end
 
   # Internal: Null serializer that transparently handles rendering `nil` in case
   # it's passed.
-  class NilClassSerializer < Granola::Serializer
+  class PrimitiveTypesSerializer < Granola::Serializer
     def serialized
-      {}
+      object
     end
   end
 end
