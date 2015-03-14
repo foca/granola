@@ -18,7 +18,7 @@ module Granola::Rack
   # You can customize the response tuple by passing the status and the default
   # headers, as in the following example:
   #
-  #   json(user, status: 400, headers: { "X-Error" => "Boom!" })
+  #   granola(user, status: 400, headers: { "X-Error" => "Boom!" })
   #
   # object - An object to serialize into JSON.
   #
@@ -35,7 +35,7 @@ module Granola::Rack
   # Raises NameError if no specific serializer is provided and we fail to infer
   #   one for this object.
   # Returns a Rack response tuple.
-  def json(object, with: nil, status: 200, headers: {}, **json_options)
+  def granola(object, with: nil, status: 200, headers: {}, **json_options)
     serializer = serializer_for(object, with: with)
 
     if serializer.last_modified

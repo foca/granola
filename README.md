@@ -59,8 +59,8 @@ If your application is based on Rack, you can simply `include Granola::Rack` and
 you get access to the following interface:
 
 ``` ruby
-json(person) #=> This will try to infer PersonSerializer from a Person instance
-json(person, with: AnotherSerializer)
+granola(person) #=> This will infer PersonSerializer from a Person instance
+granola(person, with: AnotherSerializer)
 ```
 
 *NOTE* The method relies on being an `env` method that returns the Rack
@@ -76,7 +76,7 @@ Cuba.plugin Granola::Rack
 Cuba.define do
   on get, "users/:id" do |id|
     user = User[id]
-    halt json(user)
+    halt granola(user)
   end
 end
 ```
@@ -117,7 +117,7 @@ Cuba.use Rack::ConditionalGet
 
 Cuba.define do
   on get, "users/:id" do |id|
-    halt json(User[id])
+    halt granola(User[id])
   end
 end
 ```
