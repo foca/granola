@@ -26,7 +26,7 @@ module Granola
       def valid?
         validation_errors.clear
         validation_errors.concat(
-          JSON::Validator.fully_validate(self.class.schema, attributes)
+          JSON::Validator.fully_validate(self.class.schema, serialized)
         )
         validation_errors.empty?
       end
@@ -52,7 +52,7 @@ module Granola
   #   serializer = SchemaSerializer.new(PersonSerializer.schema)
   #   serializer.to_json
   class SchemaSerializer < Serializer
-    def attributes
+    def serialized
       {
         "$schema".freeze => "http://json-schema.org/schema#".freeze,
         "type".freeze => "object".freeze

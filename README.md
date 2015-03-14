@@ -11,7 +11,7 @@ gets out of your way. You just write plain ruby.
 
 ``` ruby
 class PersonSerializer < Granola::Serializer
-  def attributes
+  def serialized
     {
       "name" => object.name,
       "email" => object.email,
@@ -99,7 +99,7 @@ generating the JSON response altogether. For example, using Cuba:
 
 ``` ruby
 class UserSerializer < Granola::Serializer
-  def attributes
+  def serialized
     { "id" => object.id, "name" => object.name, "email" => object.email }
   end
 

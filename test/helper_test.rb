@@ -3,7 +3,7 @@ require "granola/helper"
 include Granola::Helper
 
 class CustomSerializer < Granola::Serializer
-  def attributes
+  def serialized
     { "name" => object.name }
   end
 end

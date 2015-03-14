@@ -4,7 +4,7 @@ require "granola/caching"
 Person = Struct.new(:name, :age, :updated_at)
 
 class PersonSerializer < Granola::Serializer
-  def attributes
+  def serialized
     { "name" => object.name, "age" => object.age }
   end
 

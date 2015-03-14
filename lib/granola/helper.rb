@@ -41,7 +41,7 @@ module Granola::Helper
   # Internal: Null serializer that transparently handles rendering `nil` in case
   # it's passed.
   class NilClassSerializer < Granola::Serializer
-    def attributes
+    def serialized
       {}
     end
   end

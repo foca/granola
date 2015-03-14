@@ -30,13 +30,13 @@ test "can serialize the schema itself" do
 
   assert_equal \
     "http://json-schema.org/schema#",
-    serializer.attributes["$schema"]
+    serializer.serialized["$schema"]
 
-  assert_equal "object", serializer.attributes["type"]
-  assert_equal ["name"], serializer.attributes["required"]
+  assert_equal "object", serializer.serialized["type"]
+  assert_equal ["name"], serializer.serialized["required"]
   assert_equal(
     { "type" => "integer" },
-    serializer.attributes["properties"]["age"]
+    serializer.serialized["properties"]["age"]
   )
 end
 
