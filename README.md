@@ -127,6 +127,36 @@ appropriate `If-Modified-Since` or `If-None-Match` headers.
 
 [cg]: http://www.rubydoc.info/github/rack/rack/Rack/ConditionalGet
 
+## Different Formats
+
+Although Granola out of the box only ships with JSON serialization support, it's
+easy to extend and add support for different types of serialization in case your
+API needs to provide multiple formats. For example, in order to add MsgPack
+support (via the [msgpack-ruby][] library), you'd do this:
+
+``` ruby
+require "msgpack"
+
+class BaseSerializer < Granola::Serializer
+  MIME_TYPES[:msgpack] = "application/x-msgpack".freeze
+
+  def to_msgpack(*)
+    MsgPack.pack(serialized)
+  end
+end
+```
+
+Now all serializers that inherit from `BaseSerializer` can be serialized into
+MsgPack. In order to use this from our Rack helpers, you'd do:
+
+``` ruby
+granola(object, as: :msgpack)
+```
+
+This will set the correct MIME type.
+
+[msgpack-ruby]: https://github.com/msgpack/msgpack-ruby
+
 ## License
 
 This project is shared under the MIT license. See the attached LICENSE file for

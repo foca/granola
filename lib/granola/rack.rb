@@ -23,19 +23,22 @@ module Granola::Rack
   # object - An object to serialize into JSON.
   #
   # Keywords:
-  #   with:           A specific serializer class to use. If this is `nil`,
-  #                   `Helper.serializer_class_for` will be used to infer the
-  #                   serializer class.
-  #   status:         The HTTP status to return on stale responses. Defaults to
-  #                   `200`.
-  #   headers:        A Hash of default HTTP headers. Defaults to an empty Hash.
-  #   **json_options: Any other keywords passed will be forwarded to the
-  #                   serializer's `#to_json` call.
+  #   with:    A specific serializer class to use. If this is `nil`,
+  #            `Helper.serializer_class_for` will be used to infer the
+  #            serializer class.
+  #   as:      A Symbol with the type of serialization desired. Defaults to
+  #            `:json` (and it's the only one available with Granola by default)
+  #            but could be expanded with plugins to provide serialization to,
+  #            for example, MsgPack.
+  #   status:  The HTTP status to return on stale responses. Defaults to `200`.
+  #   headers: A Hash of default HTTP headers. Defaults to an empty Hash.
+  #   **opts:  Any other keywords passed will be forwarded to the serializer's
+  #            serialization backend call.
   #
   # Raises NameError if no specific serializer is provided and we fail to infer
   #   one for this object.
   # Returns a Rack response tuple.
-  def granola(object, with: nil, status: 200, headers: {}, **json_options)
+  def granola(object, with: nil, status: 200, headers: {}, as: :json, **opts)
     serializer = serializer_for(object, with: with)
 
     if serializer.last_modified
@@ -46,9 +49,9 @@ module Granola::Rack
       headers["ETag".freeze] = Digest::MD5.hexdigest(serializer.cache_key)
     end
 
-    headers["Content-Type".freeze] = serializer.mime_type
+    headers["Content-Type".freeze] = serializer.mime_type(as)
 
-    body = Enumerator.new { |y| y << serializer.to_json(json_options) }
+    body = Enumerator.new { |y| y << serializer.public_send(:"to_#{as}", opts) }
 
     [status, headers, body]
   end

@@ -27,6 +27,10 @@ module Granola
   class Serializer
     attr_reader :object
 
+    # Public: Map of the default MIME type for each given type of serialization
+    # for this object.
+    MIME_TYPES = { json: "application/json".freeze }
+
     # Public: Instantiates a list serializer that wraps around an iterable of
     # objects of the type expected by this serializer class.
     #
@@ -70,9 +74,11 @@ module Granola
     # this will be `application/json`, but you can override in your serializers
     # if your API uses a different MIME type (e.g. `application/my-app+json`).
     #
+    # type - A Symbol describing the expected mime type.
+    #
     # Returns a String.
-    def mime_type
-      "application/json".freeze
+    def mime_type(type = :json)
+      MIME_TYPES.fetch(type)
     end
   end
 
