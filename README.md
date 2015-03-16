@@ -1,4 +1,4 @@
-# Granola, a JSON serializer [![Build Status](https://img.shields.io/travis/foca/granola.svg)](https://travis-ci.org/foca/granola)
+# Granola, a JSON serializer [![Build Status](https://img.shields.io/travis/foca/granola.svg)](https://travis-ci.org/foca/granola) [![RubyGem](https://img.shields.io/gem/v/granola.svg)](https://rubygems.org/gems/granola)
 
 ![A tasty bowl of Granola](https://cloud.githubusercontent.com/assets/437/4827156/9e8d33da-5f76-11e4-8574-7803e84845f2.JPG)
 
