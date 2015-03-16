@@ -52,15 +52,13 @@ module Granola
   #   serializer = SchemaSerializer.new(PersonSerializer.schema)
   #   serializer.to_json
   class SchemaSerializer < Serializer
+    MIME_TYPES[:json] = "application/schema+json".freeze
+
     def serialized
       {
         "$schema".freeze => "http://json-schema.org/schema#".freeze,
         "type".freeze => "object".freeze
       }.merge(object)
-    end
-
-    def mime_type
-      "application/schema+json".freeze
     end
   end
 end
