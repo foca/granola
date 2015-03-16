@@ -37,7 +37,9 @@ Granola.json = Yajl::Encoder.method(:encode)
 ```
 
 If your project already uses [MultiJson][] then we will default to whatever it's
-using, so you shouldn't worry.
+using, so you shouldn't worry. Be warned that using MultiJson instead of
+using a library (such as Yajl) straight away incurs a small performance penalty
+(see, and run, [the benchmark](./benchmarks/multi_json.rb)).
 
 [Yajl]: https://github.com/brianmario/yajl-ruby
 [MultiJson]: https://github.com/intridea/multi_json
