@@ -1,16 +1,12 @@
 require "digest/md5"
 require "time"
 require "granola"
-require "granola/helper"
+require "granola/util"
 require "granola/caching"
 
 # Mixin to render JSON in the context of a Rack application. See the #json
 # method for the specifics.
 module Granola::Rack
-  def self.included(base)
-    base.send(:include, Granola::Helper)
-  end
-
   # Public: Renders a JSON representation of an object using a
   # Granola::Serializer. This takes care of setting the `Last-Modified` and
   # `ETag` headers if appropriate.
@@ -24,7 +20,7 @@ module Granola::Rack
   #
   # Keywords:
   #   with:    A specific serializer class to use. If this is `nil`,
-  #            `Helper.serializer_class_for` will be used to infer the
+  #            `Util.serializer_class_for` will be used to infer the
   #            serializer class.
   #   as:      A Symbol with the type of serialization desired. Defaults to
   #            `:json` (and it's the only one available with Granola by default)
@@ -39,7 +35,7 @@ module Granola::Rack
   #   one for this object.
   # Returns a Rack response tuple.
   def granola(object, with: nil, status: 200, headers: {}, as: :json, **opts)
-    serializer = serializer_for(object, with: with)
+    serializer = Granola::Util.serializer_for(object, with: with)
 
     if serializer.last_modified
       headers["Last-Modified".freeze] = serializer.last_modified.httpdate

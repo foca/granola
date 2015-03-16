@@ -1,6 +1,6 @@
 require "granola"
 
-module Granola::Helper
+module Granola::Util
   # Public: Returns the serializer object for rendering a specific object. The
   # class will attempt to be inferred based on the class of the passed object,
   # but a specific serializer can be passed via a keyword argument `with`.
@@ -9,15 +9,15 @@ module Granola::Helper
   #
   # Keywords
   #   with: A specific serializer class to use. If this is `nil`,
-  #         `Helper.serializer_class_for` will be used to infer the serializer
+  #         `Util.serializer_class_for` will be used to infer the serializer
   #         class. This is ignored if `object` is already a Granola::Serializer.
   #
   # Raises NameError if no specific serializer is provided and we fail to infer
   #   one for this object.
   # Returns an instance of a Granola::Serializer subclass.
-  def serializer_for(object, with: nil)
+  def self.serializer_for(object, with: nil)
     return object if Granola::Serializer === object
-    serializer_class = with || Granola::Helper.serializer_class_for(object)
+    serializer_class = with || serializer_class_for(object)
     method = object.respond_to?(:to_ary) ? :list : :new
     serializer_class.send(method, object)
   end
