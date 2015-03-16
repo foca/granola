@@ -1,5 +1,6 @@
 require "json-schema"
-require "granola"
+require "granola/serializer"
+require "granola/json"
 
 module Granola
   class Serializer

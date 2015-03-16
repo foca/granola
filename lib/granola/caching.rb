@@ -1,4 +1,4 @@
-require "granola"
+require "granola/serializer"
 
 module Granola
   # Mixin to add caching-awareness to Serializers.

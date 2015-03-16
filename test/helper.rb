@@ -1,5 +1,4 @@
 require "granola"
-require "granola/caching"
 
 Person = Struct.new(:name, :age, :updated_at)
 

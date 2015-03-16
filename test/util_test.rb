@@ -1,5 +1,3 @@
-require "granola/util"
-
 class CustomSerializer < Granola::Serializer
   def serialized
     { "name" => object.name }

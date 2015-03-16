@@ -1,5 +1,4 @@
 require "yaml"
-require "granola/rack"
 
 class BaseSerializer < Granola::Serializer
   MIME_TYPES[:yaml] = "application/x-yaml".freeze
