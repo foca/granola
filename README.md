@@ -64,10 +64,6 @@ granola(person) #=> This will infer PersonSerializer from a Person instance
 granola(person, with: AnotherSerializer)
 ```
 
-*NOTE* The method relies on being an `env` method that returns the Rack
-environment Hash in the same context where you call the method. See [the
-documentation](./lib/granola/rack.rb) for further details.
-
 This method returns a Rack response tuple that you can use like so (this example
 uses [Cuba][], but similar code will work for other frameworks):
 
