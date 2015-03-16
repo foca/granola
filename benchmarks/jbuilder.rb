@@ -40,7 +40,7 @@ SERIALIZABLE = Message.new(
 )
 
 class MessageSerializer < Granola::Serializer
-  def serialized
+  def data
     {
       content: object.content,
       created_at: object.created_at.iso8601,

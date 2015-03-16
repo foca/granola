@@ -27,7 +27,7 @@ module Granola
       def valid?
         validation_errors.clear
         validation_errors.concat(
-          JSON::Validator.fully_validate(self.class.schema, serialized)
+          JSON::Validator.fully_validate(self.class.schema, data)
         )
         validation_errors.empty?
       end
@@ -55,7 +55,7 @@ module Granola
   class SchemaSerializer < Serializer
     MIME_TYPES[:json] = "application/schema+json".freeze
 
-    def serialized
+    def data
       {
         "$schema".freeze => "http://json-schema.org/schema#".freeze,
         "type".freeze => "object".freeze

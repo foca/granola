@@ -10,7 +10,7 @@ gets out of your way. You just write plain ruby.
 
 ``` ruby
 class PersonSerializer < Granola::Serializer
-  def serialized
+  def data
     {
       "name" => object.name,
       "email" => object.email,
@@ -96,7 +96,7 @@ generating the JSON response altogether. For example, using Cuba:
 
 ``` ruby
 class UserSerializer < Granola::Serializer
-  def serialized
+  def data
     { "id" => object.id, "name" => object.name, "email" => object.email }
   end
 
@@ -138,12 +138,12 @@ class BaseSerializer < Granola::Serializer
   MIME_TYPES[:msgpack] = "application/x-msgpack".freeze
 
   def to_msgpack(*)
-    MsgPack.pack(serialized)
+    MsgPack.pack(data)
   end
 end
 ```
 
-Now all serializers that inherit from `BaseSerializer` can be serialized into
+Now all serializers that inherit from `BaseSerializer` can be data into
 MsgPack. In order to use this from our Rack helpers, you'd do:
 
 ``` ruby

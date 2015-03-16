@@ -9,7 +9,7 @@ require "multi_json"
 User = Struct.new(:name, :age)
 
 class UserSerializer < Granola::Serializer
-  def serialized
+  def data
     { "name" => object.name, "age" => object.age }
   end
 end

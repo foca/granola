@@ -1,5 +1,5 @@
 class CustomSerializer < Granola::Serializer
-  def serialized
+  def data
     { "name" => object.name }
   end
 end
@@ -68,6 +68,6 @@ end
 test "#serializer_for correctly serializes primitive types" do
   [nil, true, false, 10, 5.0, "foo"].each do |primitive_type|
     serializer = Granola::Util.serializer_for(primitive_type)
-    assert_equal primitive_type, serializer.serialized
+    assert_equal primitive_type, serializer.data
   end
 end

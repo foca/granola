@@ -3,7 +3,7 @@ require "granola"
 Person = Struct.new(:name, :age, :updated_at)
 
 class PersonSerializer < Granola::Serializer
-  def serialized
+  def data
     { "name" => object.name, "age" => object.age }
   end
 

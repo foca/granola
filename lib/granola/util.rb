@@ -24,7 +24,7 @@ module Granola
       serializer_class.send(method, object)
     end
 
-    # Internal: Infers the name of a serialized based on the class of the passed
+    # Internal: Infers the name of a serializer based on the class of the passed
     # object. The pattern is the Object's class + "Serializer". So
     # `PersonSerializer` for `Person`.
     #
@@ -48,7 +48,7 @@ module Granola
     # Internal: Null serializer that transparently handles rendering primitive
     # types.
     class PrimitiveTypesSerializer < Granola::Serializer
-      def serialized
+      def data
         object
       end
     end

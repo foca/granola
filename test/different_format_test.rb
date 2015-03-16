@@ -4,14 +4,14 @@ class BaseSerializer < Granola::Serializer
   MIME_TYPES[:yaml] = "application/x-yaml".freeze
 
   def to_yaml(**opts)
-    YAML.dump(serialized)
+    YAML.dump(data)
   end
 end
 
 User = Struct.new(:name, :age)
 
 class UserSerializer < BaseSerializer
-  def serialized
+  def data
     { "name" => object.name, "age" => object.age }
   end
 end

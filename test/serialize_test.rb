@@ -1,7 +1,7 @@
 require "ostruct"
 
 class OpenStructSerializer < Granola::Serializer
-  def serialized
+  def data
     object.send(:table).each.with_object({}) do |(key, val), hash|
       hash[key.to_s] = val
     end
@@ -21,7 +21,7 @@ scope do
 
   test "serializes the properties" do |object|
     serializer = OpenStructSerializer.new(object)
-    assert_equal({ "a" => 1, "b" => 2, "c" => 3 }, serializer.serialized)
+    assert_equal({ "a" => 1, "b" => 2, "c" => 3 }, serializer.data)
   end
 
   test "converts to json" do |object|
@@ -71,7 +71,7 @@ scope do
       @another = another
     end
 
-    def serialized
+    def data
       { "foo" => object.foo, "bar" => another.bar }
     end
   end

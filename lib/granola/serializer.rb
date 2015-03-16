@@ -36,7 +36,7 @@ module Granola
     # values.
     #
     # Raises NotImplementedError unless you override in subclasses.
-    def serialized
+    def data
       fail NotImplementedError
     end
 
@@ -78,8 +78,8 @@ module Granola
     end
 
     # Public: Returns an Array of Hashes that can be serialized into JSON.
-    def serialized
-      @list.map(&:serialized)
+    def data
+      @list.map(&:data)
     end
   end
 end

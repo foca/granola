@@ -31,7 +31,7 @@ module Granola
     #
     # Returns a String.
     def to_json(**options)
-      Granola.json.(serialized, options)
+      Granola.json.(data, options)
     end
   end
 end
