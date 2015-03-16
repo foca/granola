@@ -156,5 +156,7 @@ This will set the correct MIME type.
 
 ## License
 
-This project is shared under the MIT license. See the attached LICENSE file for
-details.
+This project is shared under the MIT license. See the attached [LICENSE][] file
+for details.
+
+[LICENSE]: ./LICENSE
