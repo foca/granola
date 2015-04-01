@@ -14,8 +14,10 @@ Gem::Specification.new do |s|
     "LICENSE",
     "README.md",
     "lib/granola.rb",
+    "lib/granola/serializer.rb",
+    "lib/granola/json.rb",
     "lib/granola/version.rb",
-    "lib/granola/helper.rb",
+    "lib/granola/util.rb",
     "lib/granola/rack.rb",
     "lib/granola/caching.rb",
   ]
