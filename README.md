@@ -138,7 +138,7 @@ class BaseSerializer < Granola::Serializer
   MIME_TYPES[:msgpack] = "application/x-msgpack".freeze
 
   def to_msgpack(*)
-    MsgPack.pack(data)
+    MessagePack.pack(data)
   end
 end
 ```
