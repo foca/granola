@@ -2,7 +2,7 @@ ifndef GS_NAME
   $(error GS_NAME not set. Have you `gs in` yet?)
 endif
 
-PACKAGES := granola granola-schema
+PACKAGES := granola
 VERSION_FILE := lib/granola/version.rb
 
 DEPS := ${GEM_HOME}/installed
