@@ -22,7 +22,7 @@ clean:
 release: $(GEMS)
 	for gem in $^; do gem push $$gem; done
 
-pkg/%-$(VERSION).gem: %.gemspec $(VERSION_FILE)
+pkg/%-$(VERSION).gem: %.gemspec $(VERSION_FILE) | pkg
 	gem build $<
 	mv $(@F) pkg/
 
@@ -30,5 +30,8 @@ $(DEPS): $(GEM_HOME) .gems
 	which dep &>/dev/null || gem install dep
 	dep install
 	touch $(GEM_HOME)/installed
+
+pkg:
+	mkdir -p $@
 
 .PHONY: all test release clean
