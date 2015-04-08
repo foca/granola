@@ -3,10 +3,10 @@ ifndef GS_NAME
 endif
 
 PACKAGES := granola granola-schema
-VERSION_FILE := lib/*/version.rb
+VERSION_FILE := lib/granola/version.rb
 
 DEPS := ${GEM_HOME}/installed
-VERSION := $(shell grep VERSION $(VERSION_FILE) | sed -e 's/VERSION =//' -e 's/[ "]//g')
+VERSION := $(shell sed -ne '/.*VERSION *= *"\(.*\)".*/s//\1/p' <$(VERSION_FILE))
 GEMS := $(addprefix pkg/, $(addsuffix -$(VERSION).gem, $(PACKAGES)))
 
 export RUBYLIB := $(RUBYLIB):test:lib
