@@ -9,7 +9,7 @@ DEPS := ${GEM_HOME}/installed
 VERSION := $(shell grep VERSION $(VERSION_FILE) | sed -e 's/VERSION =//' -e 's/[ "]//g')
 GEMS := $(addprefix pkg/, $(addsuffix -$(VERSION).gem, $(PACKAGES)))
 
-export RUBYLIB=$RUBYLIB:test:lib
+export RUBYLIB := $(RUBYLIB):test:lib
 
 all: test $(GEMS)
 
