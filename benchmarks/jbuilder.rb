@@ -1,10 +1,9 @@
 require "benchmark"
 require "granola"
 require "jbuilder"
-require "yajl"
 
-MultiJson.use :yajl
-Granola.json = Yajl::Encoder.method(:encode)
+require "oj"
+require "oj_mimic_json"
 
 Message = Struct.new(
   :content,
@@ -88,6 +87,6 @@ def jbuilder(message)
 end
 
 Benchmark.bmbm do |b|
-  b.report("jbuilder") { 10_1000.times { jbuilder(SERIALIZABLE) } }
-  b.report("granola")  { 10_1000.times { granola(SERIALIZABLE) } }
+  b.report("jbuilder") { 10_000.times { jbuilder(SERIALIZABLE) } }
+  b.report("granola")  { 10_000.times { granola(SERIALIZABLE) } }
 end
