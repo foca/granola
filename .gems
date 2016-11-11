@@ -1,4 +1,2 @@
 cutest -v 1.2.1
 rack -v 1.5.2
-json-schema -v 2.2.4
-multi_json -v 1.10.1
