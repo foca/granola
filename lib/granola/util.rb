@@ -33,20 +33,18 @@ module Granola
     # Raises NameError if no matching class exists.
     # Returns a Class.
     def self.serializer_class_for(object)
-      object = object.respond_to?(:to_ary) ? object.to_ary.fetch(0, nil) : object
-      name = object.class.name
-      Object.const_get("%sSerializer" % name)
-    rescue NameError
+      object = object.respond_to?(:to_ary) ? object.to_ary[0] : object
+
       case object
       when NilClass, TrueClass, FalseClass, Numeric, String
         PrimitiveTypesSerializer
       else
-        raise
+        name = object.class.name
+        Object.const_get("%sSerializer" % name)
       end
     end
 
-    # Internal: Null serializer that transparently handles rendering primitive
-    # types.
+    # Internal: Serializer that transparently handles rendering primitive types.
     class PrimitiveTypesSerializer < Granola::Serializer
       def data
         object
