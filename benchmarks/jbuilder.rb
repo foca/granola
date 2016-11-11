@@ -1,4 +1,4 @@
-require "benchmark"
+require "benchmark/ips"
 require "granola"
 require "jbuilder"
 
@@ -86,7 +86,8 @@ def jbuilder(message)
   end
 end
 
-Benchmark.bmbm do |b|
-  b.report("jbuilder") { 10_000.times { jbuilder(SERIALIZABLE) } }
-  b.report("granola")  { 10_000.times { granola(SERIALIZABLE) } }
+Benchmark.ips do |b|
+  b.report("jbuilder") { jbuilder(SERIALIZABLE) }
+  b.report("granola")  { granola(SERIALIZABLE) }
+  b.compare!
 end

@@ -1,4 +1,4 @@
-require "benchmark"
+require "benchmark/ips"
 require "granola"
 require "active_support/core_ext/module/delegation"
 require "active_model_serializers"
@@ -61,7 +61,9 @@ def active_model
   ).to_json
 end
 
-Benchmark.bmbm do |b|
-  b.report("active_model") { 10_000.times { active_model } }
-  b.report("granola") { 10_000.times { granola } }
+Benchmark.ips do |b|
+  b.report("active_model") { active_model }
+  b.report("granola") { granola }
+
+  b.compare!
 end

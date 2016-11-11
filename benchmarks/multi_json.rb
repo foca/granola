@@ -1,4 +1,4 @@
-require "benchmark"
+require "benchmark/ips"
 require "granola"
 require "oj"
 require "multi_json"
@@ -16,15 +16,17 @@ end
 
 SERIALIZER = UserSerializer.new(User.new("John Doe", 30))
 
-Benchmark.bmbm do |b|
+Benchmark.ips do |b|
   b.report("plain") do
     Granola.json = Oj.method(:dump)
-    10_000.times { SERIALIZER.to_json }
+    SERIALIZER.to_json
   end
 
   b.report("multi_json") do
     MultiJson.use :oj
     Granola.json = MultiJson.method(:dump)
-    10_000.times { SERIALIZER.to_json }
+    SERIALIZER.to_json
   end
+
+  b.compare!
 end
