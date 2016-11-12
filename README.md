@@ -135,7 +135,7 @@ support (via the [msgpack-ruby][] library), you'd do this:
 ``` ruby
 require "msgpack"
 
-Granola.render :msgpack, via: MessagePack.method(:data),
+Granola.render :msgpack, via: MessagePack.method(:pack),
                          content_type: "application/x-msgpack"
 ```
 
