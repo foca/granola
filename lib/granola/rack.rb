@@ -3,7 +3,6 @@ require "time"
 require "granola/serializer"
 require "granola/util"
 require "granola/caching"
-require "granola/json"
 
 module Granola
   # Mixin to render JSON in the context of a Rack application. See the #json

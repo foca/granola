@@ -1,3 +1,5 @@
+require "json"
+
 module Granola
   # Public: Register a new renderer. A renderer must be a callable that, given
   # the output of a Serializer's `data` method, will turn that into a stream
@@ -39,6 +41,8 @@ module Granola
   # Internal: Map of renderers available to this serializer. See
   # `Granola.render`.
   RENDERERS = {}
+
+  render :json, via: JSON.method(:generate), content_type: "application/json"
 
   class Serializer
     # Public: Serialize this instance into the desired format. See
