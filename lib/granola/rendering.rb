@@ -48,6 +48,7 @@ module Granola
     # **options - An options Hash or set of keyword arguments that will be
     #             passed to the renderer.
     #
+    # Raises KeyError if there's no Renderer registered for the given `type`.
     # Returns a String (in the encoding approrpriate to the rendering format.)
     def render(type = :json, **options, &block)
       Granola::RENDERERS.fetch(type).fetch(:via).call(data, **options, &block)
@@ -58,6 +59,7 @@ module Granola
     #
     # type - A Symbol describing the expected rendering format.
     #
+    # Raises KeyError if there's no Renderer registered for the given `type`.
     # Returns a String.
     def mime_type(type = :json)
       Granola::RENDERERS.fetch(type).fetch(:content_type)
