@@ -1,6 +1,6 @@
-require "benchmark"
+require "benchmark/ips"
 require "granola"
-require "yajl"
+require "oj"
 require "multi_json"
 
 # This benchmark compares serializing a relatively trivial structure using both
@@ -16,15 +16,17 @@ end
 
 SERIALIZER = UserSerializer.new(User.new("John Doe", 30))
 
-Benchmark.bmbm do |b|
+Benchmark.ips do |b|
   b.report("plain") do
-    Granola.json = Yajl::Encoder.method(:encode)
-    10_1000.times { SERIALIZER.to_json }
+    Granola.json = Oj.method(:dump)
+    SERIALIZER.to_json
   end
 
   b.report("multi_json") do
-    MultiJson.use :yajl
+    MultiJson.use :oj
     Granola.json = MultiJson.method(:dump)
-    10_1000.times { SERIALIZER.to_json }
+    SERIALIZER.to_json
   end
+
+  b.compare!
 end
