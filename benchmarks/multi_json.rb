@@ -15,16 +15,18 @@ class UserSerializer < Granola::Serializer
 end
 
 SERIALIZER = UserSerializer.new(User.new("John Doe", 30))
+MultiJson.use :oj
 
 Benchmark.ips do |b|
   b.report("plain") do
-    Granola.json = Oj.method(:dump)
+    Granola.render :json, via: Oj.method(:dump),
+                          content_type: "application/json"
     SERIALIZER.to_json
   end
 
   b.report("multi_json") do
-    MultiJson.use :oj
-    Granola.json = MultiJson.method(:dump)
+    Granola.render :json, via: MultiJson.method(:dump),
+                          content_type: "application/json"
     SERIALIZER.to_json
   end
 

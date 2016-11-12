@@ -8,12 +8,6 @@ class OpenStructSerializer < Granola::Serializer
   end
 end
 
-class CustomMIMESerializer < OpenStructSerializer
-  def mime_type
-    "application/my-app+json"
-  end
-end
-
 scope do
   setup do
     OpenStruct.new(a: 1, b: 2, c: 3)
@@ -32,11 +26,6 @@ scope do
   test "knows the default MIME type" do |object|
     serializer = OpenStructSerializer.new(object)
     assert_equal "application/json", serializer.mime_type
-  end
-
-  test "can define custom mime types" do |object|
-    serializer = CustomMIMESerializer.new(object)
-    assert_equal "application/my-app+json", serializer.mime_type
   end
 end
 
@@ -90,16 +79,5 @@ scope do
 
     serializer = MultipleObjectSerializer.list(foos, bar)
     assert_equal %q|[{"foo":1,"bar":3},{"foo":2,"bar":3}]|, serializer.to_json
-  end
-end
-
-scope do
-  prepare do
-    Granola.json = ->(obj, **opts) { "success!" }
-  end
-
-  test "serializes with a custom json backend" do
-    serializer = OpenStructSerializer.new(OpenStruct.new)
-    assert_equal "success!", serializer.to_json
   end
 end
