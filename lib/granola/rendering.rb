@@ -44,6 +44,17 @@ module Granola
 
   render :json, via: JSON.method(:generate), content_type: "application/json"
 
+  # Deprecated: The old way of registering a JSON renderer. This will be gone in
+  # 1.0.
+  #
+  # renderer - A callable. See the format in `Granola.render`
+  #
+  # Returns nothing.
+  def self.json=(renderer)
+    warn "Granola.json= has been deprecated. Use Granola.render now."
+    render(:json, via: renderer, content_type: "application/json")
+  end
+
   class Serializer
     # Public: Serialize this instance into the desired format. See
     # `Serializer.render` for how to register new rendering formats.
