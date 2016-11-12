@@ -51,7 +51,7 @@ module Granola
       headers["Content-Type".freeze] = serializer.mime_type(as)
 
       body = Enumerator.new do |yielder|
-        yielder << serializer.public_send(:"to_#{as}", opts)
+        yielder << serializer.render(as, opts)
       end
 
       [status, headers, body]
