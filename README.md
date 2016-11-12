@@ -30,21 +30,22 @@ PersonSerializer.new(person).to_json #=> '{"name":"John Doe",...}'
 
 Granola doesn't make assumptions about your code, so it shouldn't depend on a
 specific JSON backend. It defaults to the native JSON backend, but you're free
-to change it. For example, if you were using [Yajl][]:
+to change it. For example, if you were using [Oj][]:
 
 ``` ruby
-Granola.json = Yajl::Encoder.method(:encode)
+Granola.render :json, via: Oj.method(:dump),
+                      content_type: "application/json"
 ```
 
 If your project already uses [MultiJson][] then we will default to whatever it's
 using, so you shouldn't worry. Be warned that using MultiJson instead of
-using a library (such as Yajl) straight away incurs a small performance penalty
-(see, and run, [the benchmark](./benchmarks/multi_json.rb)).
+using a library (such as Yajl) straight away incurs a performance penalty (see,
+and run, [the benchmark](./benchmarks/multi_json.rb)).
 
-[Yajl]: https://github.com/brianmario/yajl-ruby
+[Oj]: https://github.com/ohler55/oj
 [MultiJson]: https://github.com/intridea/multi_json
 
-## Handling lists of models
+## Handling lists of entities
 
 A Granola serializer can handle a list of entities of the same type by using the
 `Serializer.list` method (instead of `Serializer.new`). For example:
@@ -134,17 +135,12 @@ support (via the [msgpack-ruby][] library), you'd do this:
 ``` ruby
 require "msgpack"
 
-class BaseSerializer < Granola::Serializer
-  MIME_TYPES[:msgpack] = "application/x-msgpack".freeze
-
-  def to_msgpack(*)
-    MessagePack.pack(data)
-  end
-end
+Granola.render :msgpack, via: MessagePack.method(:data),
+                         content_type: "application/x-msgpack"
 ```
 
-Now all serializers that inherit from `BaseSerializer` can be data into
-MsgPack. In order to use this from our Rack helpers, you'd do:
+Now all serializers can be serialized into MsgPack using a `to_msgpack` method.
+In order to use this from our Rack helpers, you'd do:
 
 ``` ruby
 granola(object, as: :msgpack)
