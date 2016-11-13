@@ -71,3 +71,20 @@ test "#serializer_for correctly serializes primitive types" do
     assert_equal primitive_type, serializer.data
   end
 end
+
+module Serializers
+  class Foo < Granola::Serializer; end
+end
+
+class Foo; end
+
+scope do
+  Granola::Util.constant_lookup = ->(name) do
+    Serializers.const_get(name.sub(/Serializer$/, ""))
+  end
+
+  test "can find serializers using a different constant lookup method" do
+    klass = Granola::Util.serializer_class_for(::Foo.new)
+    assert_equal Serializers::Foo, klass
+  end
+end
