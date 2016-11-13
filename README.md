@@ -133,14 +133,26 @@ Granola.render :msgpack, via: MessagePack.method(:pack),
                          content_type: "application/x-msgpack"
 ```
 
-Now all serializers can be serialized into MsgPack using a `to_msgpack` method.
-In order to use this from our Rack helpers, you'd do:
+Now all serializers can be serialized into MsgPack using a `to_msgpack` method
+(or `render(:msgpack)`). In order to use this from our Rack helpers, you'd do:
 
 ``` ruby
 granola(object, as: :msgpack)
 ```
 
 This will set the correct MIME type.
+
+If you don't explicitly set a format when rendering via the rack helper, Granola
+will use the request's `Accept` header to choose the best format for rendering.
+
+For example, given a request with the following header:
+
+    Accept: text/x-yaml;q=0.5,application/x-msgpack;q=0.8,*/*;q=0.2
+
+Granola will check first if you have a renderer registered for the
+`application/x-msgpack` MIME type, and then check for a renderer for the
+`text/x-yaml` MIME type. If none of these are registered, it will default to
+rendering JSON.
 
 [msgpack-ruby]: https://github.com/msgpack/msgpack-ruby
 

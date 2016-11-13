@@ -58,3 +58,42 @@ test "allows passing default headers" do |context|
   assert_equal "application/json", headers["Content-Type"]
   assert_equal "Meow", headers["Other-Header"]
 end
+
+scope do
+  Granola.render(:msgpack, content_type: "application/x-msgpack",
+                           via: ->(*) { "MessagePack"})
+  Granola.render(:yaml, content_type: "text/x-yaml",
+                        via: ->(*) { "YAML" })
+  Granola.render(:json, content_type: "application/json",
+                        via: ->(*) { "JSON" })
+
+  test "infers rendering format from Accept header" do |context|
+    context.env["HTTP_ACCEPT"] = "text/x-yaml"
+    status, header, body = context.granola(@person)
+    assert_equal ["YAML"], body.to_a
+  end
+
+  test "uses Q-values in the Accept header to infer best format" do |context|
+    context.env["HTTP_ACCEPT"] = "text/x-yaml;q=0.1,application/x-msgpack;q=0.8"
+    status, header, body = context.granola(@person)
+    assert_equal ["MessagePack"], body.to_a
+  end
+
+  test "allows overriding with an explicit format" do |context|
+    context.env["HTTP_ACCEPT"] = "text/x-yaml"
+    status, header, body = context.granola(@person, as: :msgpack)
+    assert_equal ["MessagePack"], body.to_a
+  end
+
+  test "defaults to JSON when it can't infer a format" do |context|
+    context.env["HTTP_ACCEPT"] = "*/*"
+    status, header, body = context.granola(@person)
+    assert_equal ["JSON"], body.to_a
+  end
+
+  test "defaults to JSON when there's no Accept header" do |context|
+    context.env.delete("HTTP_ACCEPT")
+    status, header, body = context.granola(@person)
+    assert_equal ["JSON"], body.to_a
+  end
+end

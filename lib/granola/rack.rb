@@ -3,6 +3,7 @@ require "time"
 require "granola/serializer"
 require "granola/util"
 require "granola/caching"
+require "rack/utils"
 
 module Granola
   # Mixin to render JSON in the context of a Rack application. See the #json
@@ -36,7 +37,7 @@ module Granola
     # infer one for this object.
     #
     # Returns a Rack response tuple.
-    def granola(object, with: nil, status: 200, headers: {}, as: :json, **opts)
+    def granola(object, with: nil, status: 200, headers: {}, as: nil, **opts)
       serializer = Granola::Util.serializer_for(object, with: with)
 
       if serializer.last_modified
@@ -47,13 +48,39 @@ module Granola
         headers["ETag".freeze] = Digest::MD5.hexdigest(serializer.cache_key)
       end
 
-      headers["Content-Type".freeze] = serializer.mime_type(as)
+      format = as || Granola::Rack.best_format_for(env["HTTP_ACCEPT"]) || :json
+
+      headers["Content-Type".freeze] = serializer.mime_type(format)
 
       body = Enumerator.new do |yielder|
-        yielder << serializer.render(as, opts)
+        yielder << serializer.render(format, opts)
       end
 
       [status, headers, body]
+    end
+
+    # Internal: Infer the best rendering format based on the value of an Accept
+    # header and the available registered renderers.
+    #
+    # If there are renderers registered for JSON, and MessagePack, an Accept
+    # header preferring MessagePack over JSON will result in the response being
+    # serialized into MessagePack instead of JSON, unless the user explicitly
+    # prefers JSON.
+    #
+    # accept              - String with the value of an HTTP Accept header.
+    # available_renderers - Map of registered renderers. Defaults to
+    #                       `Granola::RENDERERS`.
+    #
+    # Returns a Symbol with a Renderer type, or `nil` if none could be inferred.
+    def self.best_format_for(accept, available_renderers = Granola::RENDERERS)
+      formats = available_renderers.map { |f, r| [r[:content_type], f] }.to_h
+
+      ::Rack::Utils.q_values(accept).sort_by { |_, q| -q }.each do |type, _|
+        format = formats[type]
+        return format unless format.nil?
+      end
+
+      nil
     end
   end
 end
