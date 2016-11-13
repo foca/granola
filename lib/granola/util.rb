@@ -2,6 +2,22 @@ require "granola/serializer"
 
 module Granola
   module Util
+    class << self
+      # Public: Get/Set the mechanism used to look up constants by name. This
+      # should be a callable that takes a String with a constant's name and
+      # converts this to a Serializer class, or fails with NameError.
+      #
+      # Example:
+      #
+      #   # Find serializers under Serializers::Foo instead of FooSerializer.
+      #   Granola::Util.constant_lookup = ->(name) do
+      #     Serializers.const_get(name.sub(/Serializer$/, ""))
+      #   end
+      attr_accessor :constant_lookup
+    end
+
+    self.constant_lookup = Object.method(:const_get)
+
     # Public: Returns the serializer object for rendering a specific object. The
     # class will attempt to be inferred based on the class of the passed object,
     # but a specific serializer can be passed via a keyword argument `with`.
@@ -40,7 +56,7 @@ module Granola
         PrimitiveTypesSerializer
       else
         name = object.class.name
-        Object.const_get("%sSerializer" % name)
+        constant_lookup.call("%sSerializer" % name)
       end
     end
 
