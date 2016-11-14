@@ -136,8 +136,8 @@ Granola.render :msgpack, via: MessagePack.method(:pack),
                          content_type: "application/x-msgpack"
 ```
 
-Now all serializers can be serialized into MsgPack using a `to_msgpack` method
-(or `render(:msgpack)`). In order to use this from our Rack helpers, you'd do:
+Now all serializers can be serialized into MsgPack using a `to_msgpack` method.
+In order to use this from our Rack helpers, you'd do:
 
 ``` ruby
 granola(object, as: :msgpack)

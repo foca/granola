@@ -22,11 +22,6 @@ scope do
     serializer = OpenStructSerializer.new(object)
     assert_equal %q|{"a":1,"b":2,"c":3}|, serializer.to_json
   end
-
-  test "knows the default MIME type" do |object|
-    serializer = OpenStructSerializer.new(object)
-    assert_equal "application/json", serializer.mime_type
-  end
 end
 
 scope do

@@ -46,12 +46,14 @@ module Granola
         headers["ETag".freeze] = Digest::MD5.hexdigest(serializer.cache_key)
       end
 
-      format = as || Granola::Rack.best_format_for(env["HTTP_ACCEPT"]) || :json
+      renderer = Granola.renderer(
+        as || Granola::Rack.best_format_for(env["HTTP_ACCEPT"]) || :json
+      )
 
-      headers["Content-Type".freeze] = serializer.mime_type(format)
+      headers["Content-Type".freeze] = renderer.content_type
 
       body = Enumerator.new do |yielder|
-        yielder << serializer.render(format, opts)
+        yielder << renderer.render(serializer, opts)
       end
 
       [status, headers, body]
@@ -71,7 +73,7 @@ module Granola
     #
     # Returns a Symbol with a Renderer type, or `nil` if none could be inferred.
     def self.best_format_for(accept, available_renderers = Granola::RENDERERS)
-      formats = available_renderers.map { |f, r| [r[:content_type], f] }.to_h
+      formats = available_renderers.map { |f, r| [r.content_type, f] }.to_h
 
       ::Rack::Utils.q_values(accept).sort_by { |_, q| -q }.each do |type, _|
         format = formats[type]
