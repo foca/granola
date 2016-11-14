@@ -2,6 +2,7 @@ module Granola
   # A Serializer describes how to serialize a certain type of object, by
   # declaring the structure of JSON objects.
   class Serializer
+    # Public: Get the domain model to serialize.
     attr_reader :object
 
     # Public: Instantiates a list serializer that wraps around an iterable of
@@ -19,7 +20,7 @@ module Granola
 
     # Public: Initialize the serializer with a given object.
     #
-    # object - The domain model that we want to serialize into JSON.
+    # object - The domain model that we want to serialize.
     def initialize(object)
       @object = object
     end
