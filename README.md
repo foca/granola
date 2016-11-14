@@ -51,8 +51,9 @@ serializer.to_json #=> '[{"name":"John Doe",...},{...}]'
 
 ## Rack Helpers
 
-If your application is based on Rack, you can simply `include Granola::Rack` and
-you get access to the following interface:
+If your application is based on Rack, you can `require "granola/rack"` instead
+of `require "granola"`, and then simply `include Granola::Rack` to get access
+to the following interface:
 
 ``` ruby
 granola(person) #=> This will infer PersonSerializer from a Person instance
@@ -63,6 +64,8 @@ This method returns a Rack response tuple that you can use like so (this example
 uses [Cuba][], but similar code will work for other frameworks):
 
 ``` ruby
+require "granola/rack"
+
 Cuba.plugin Granola::Rack
 
 Cuba.define do

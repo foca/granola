@@ -1,7 +1,6 @@
 require "digest/md5"
 require "time"
-require "granola/serializer"
-require "granola/util"
+require "granola"
 require "granola/caching"
 require "rack/utils"
 
