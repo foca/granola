@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "digest/md5"
 require "time"
 require "granola"
@@ -41,18 +42,18 @@ module Granola
       serializer = Granola::Util.serializer_for(object, with: with)
 
       if serializer.last_modified
-        headers["Last-Modified".freeze] = serializer.last_modified.httpdate
+        headers["Last-Modified"] = serializer.last_modified.httpdate
       end
 
       if serializer.cache_key
-        headers["ETag".freeze] = Digest::MD5.hexdigest(serializer.cache_key)
+        headers["ETag"] = Digest::MD5.hexdigest(serializer.cache_key)
       end
 
       renderer = Granola.renderer(
         as || Granola::Rack.best_format_for(env["HTTP_ACCEPT"]) || :json
       )
 
-      headers["Content-Type".freeze] = renderer.content_type
+      headers["Content-Type"] = renderer.content_type
 
       body = Enumerator.new do |yielder|
         yielder << renderer.render(serializer, opts)
