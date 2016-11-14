@@ -96,4 +96,10 @@ scope do
     status, header, body = context.granola(@person)
     assert_equal ["JSON"], body.to_a
   end
+
+  test "can pass Rack's env Hash explicitly" do |context|
+    context.env["HTTP_ACCEPT"] = "*/*"
+    *_, body = context.granola(@person, env: { "HTTP_ACCEPT" => "text/x-yaml" })
+    assert_equal ["YAML"], body.to_a
+  end
 end

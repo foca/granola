@@ -28,6 +28,8 @@ module Granola
     #            example, MsgPack.
     #   status:  The HTTP status to return on stale responses. Defaults to `200`
     #   headers: A Hash of default HTTP headers. Defaults to an empty Hash.
+    #   env:     Rack's env-Hash to inspect request headers. Defaults to
+    #            an `env` method in the object that includes `Granola::Rack`.
     #   **opts:  Any other keywords passed will be forwarded to the serializer's
     #            serialization backend call.
     #
@@ -35,7 +37,7 @@ module Granola
     # infer one for this object.
     #
     # Returns a Rack response tuple.
-    def granola(object, with: nil, status: 200, headers: {}, as: nil, **opts)
+    def granola(object, with: nil, status: 200, headers: {}, as: nil, env: self.env, **opts)
       serializer = Granola::Util.serializer_for(object, with: with)
 
       if serializer.last_modified
