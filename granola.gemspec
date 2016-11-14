@@ -15,11 +15,10 @@ Gem::Specification.new do |s|
     "README.md",
     "lib/granola.rb",
     "lib/granola/serializer.rb",
-    "lib/granola/json.rb",
-    "lib/granola/version.rb",
+    "lib/granola/rendering.rb",
     "lib/granola/util.rb",
     "lib/granola/rack.rb",
-    "lib/granola/caching.rb",
+    "lib/granola/version.rb",
   ]
 
   s.add_development_dependency "cutest", "~> 1.2"
