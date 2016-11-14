@@ -40,4 +40,8 @@ scope do
 
     assert Granola::NoSuchRendererError < ArgumentError
   end
+
+  test "lists the formats registered for rendering" do
+    assert_equal [:json, :yaml], Granola.renderable_formats
+  end
 end

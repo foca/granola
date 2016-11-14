@@ -52,8 +52,13 @@ module Granola
     end
   end
 
-  # Internal: Map of renderers available to this serializer. See
-  # `Granola.render`.
+  # Public: Returns an Array of types with a registered Renderer as Symbols. See
+  # `Granola.render` to register a new Renderer instance.
+  def self.renderable_formats
+    RENDERERS.keys
+  end
+
+  # Internal: Map of renderers available to this serializer.
   RENDERERS = {}
 
   # Renderer objects just wrap the callable used to render an object and keep a
