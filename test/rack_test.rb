@@ -36,6 +36,11 @@ test "adds the JSON body of an empty list to the response" do |context|
   assert_equal ["[]"], body.to_a
 end
 
+test "can serialize a plain hash" do |context|
+  status, headers, body = context.granola(key: "value")
+  assert_equal ['{"key":"value"}'], body.to_a
+end
+
 test "sets the Content-Type on the response" do |context|
   status, headers, body = context.granola(@person)
   assert_equal "application/json", headers["Content-Type"]

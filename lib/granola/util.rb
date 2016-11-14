@@ -53,7 +53,7 @@ module Granola
       object = object.respond_to?(:to_ary) ? object.to_ary[0] : object
 
       case object
-      when NilClass, TrueClass, FalseClass, Numeric, String
+      when Hash, NilClass, TrueClass, FalseClass, Numeric, String
         PrimitiveTypesSerializer
       else
         name = object.class.name
