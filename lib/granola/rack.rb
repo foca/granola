@@ -67,13 +67,13 @@ module Granola
     # serialized into MessagePack instead of JSON, unless the user explicitly
     # prefers JSON.
     #
-    # accept              - String with the value of an HTTP Accept header.
-    # available_renderers - Map of registered renderers. Defaults to
-    #                       `Granola::RENDERERS`.
+    # accept  - String with the value of an HTTP Accept header.
+    # formats - Map of registered renderers. Defaults to
+    #           `Granola.renderable_formats`.
     #
     # Returns a Symbol with a Renderer type, or `nil` if none could be inferred.
-    def self.best_format_for(accept, available_renderers = Granola::RENDERERS)
-      formats = available_renderers.map { |f, r| [r.content_type, f] }.to_h
+    def self.best_format_for(accept, formats = Granola.renderable_formats)
+      formats = formats.map { |f| [Granola.renderer(f).content_type, f] }.to_h
 
       ::Rack::Utils.q_values(accept).sort_by { |_, q| -q }.each do |type, _|
         format = formats[type]
