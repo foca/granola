@@ -78,7 +78,12 @@ end
 
 [Cuba]: http://cuba.is
 
-## Caching
+## Rails Support
+
+The companion [Granola::Rails](https://github.com/foca/granola-rails) gem takes
+care of support for Rails.
+
+## HTTP Caching
 
 `Granola::Serializer` gives you two methods that you can implement in your
 serializers: `last_modified` and `cache_key`.
@@ -121,6 +126,12 @@ This will avoid generating the JSON response altogether if the user sends the
 appropriate `If-Modified-Since` or `If-None-Match` headers.
 
 [cg]: http://www.rubydoc.info/github/rack/rack/Rack/ConditionalGet
+
+## Caching of serialized bodies
+
+If you are generating responses that are particularly expensive to serialize,
+you can use the [Granola::Cache](https://github.com/foca/granola-cache) gem to
+store their representations once generated in an external cache.
 
 ## Different Formats
 
