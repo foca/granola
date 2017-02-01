@@ -59,7 +59,7 @@ module Granola
     RENDERERS.keys
   end
 
-  # Internal: Map of renderers available to this serializer.
+  # Internal: Map of renderers available to all serializers.
   RENDERERS = {}
 
   # Renderer objects just wrap the callable used to render an object and keep a
@@ -106,47 +106,4 @@ module Granola
   end
 
   render :json, via: JSON.method(:generate), content_type: "application/json"
-
-  # Deprecated: The old way of registering a JSON renderer. This will be gone in
-  # 1.0.
-  #
-  # callable - A callable. See the format in `Granola.render`
-  #
-  # Returns nothing.
-  def self.json=(callable)
-    warn "Granola.json= has been deprecated. Use Granola.render now."
-    render(:json, via: callable, content_type: "application/json")
-  end
-
-  class Serializer
-    # Deprecated: Use Granola.renderer and a Renderer's render method directly.
-    # This method will be removed in 1.0.
-    #
-    # type      - A Symbol with the expected rendering format.
-    # **options - An options Hash or set of keyword arguments that will be
-    #             passed to the renderer.
-    #
-    # Raises KeyError if there's no Renderer registered for the given `type`.
-    # Returns a String (in the encoding approrpriate to the rendering format.)
-    def render(type = :json, **options, &block)
-      warn "Granola::Serializer#render has been deprecated. Use Granola.renderer(type).render."
-      Granola.renderer(type).render(self, **options, &block)
-    rescue NoSuchRendererError => err
-      fail KeyError, err.message
-    end
-
-    # Deprecated: Use Granola.renderer and the Renderer's content_type method
-    # directly. This method will be removed in 1.0.
-    #
-    # type - A Symbol describing the expected rendering format.
-    #
-    # Raises KeyError if there's no Renderer registered for the given `type`.
-    # Returns a String.
-    def mime_type(type = :json)
-      warn "Granola::Serializer#mime_type has been deprecated. Use Granola.renderer(type).content_type."
-      Granola.renderer(type).content_type
-    rescue NoSuchRendererError => err
-      fail KeyError, err.message
-    end
-  end
 end
