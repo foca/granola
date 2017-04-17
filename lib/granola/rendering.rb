@@ -36,7 +36,7 @@ module Granola
   def self.render(type, via:, content_type:)
     RENDERERS[type.to_sym] = Renderer.new(via, content_type)
     Serializer.send :define_method, "to_#{type}" do |**opts, &block|
-      Granola.renderer(type).render(self, **opts, &block)
+      Granola.renderer(type).render(to_serializer, **opts, &block)
     end
   end
 
