@@ -2,6 +2,7 @@ require "benchmark/ips"
 require "granola"
 require "jbuilder"
 require "active_model_serializers"
+require "fast_jsonapi"
 
 require "oj"
 require "oj_mimic_json"
@@ -14,14 +15,20 @@ Message = Struct.new(
   :attachments,
   :created_at,
   :updated_at,
+
+  # Needed for FastJsonapi
+  :author_id,
+  :comment_ids,
+  :attachment_ids,
 )
 Person = Struct.new(:name, :email_address, :url)
 Comment = Struct.new(:content, :created_at)
 Attachment = Struct.new(:filename, :url)
 
-# Only needed for ActiveModelSerializers
+# Needed for ActiveModelSerializers and FastJsonapi
 [Message, Person, Comment, Attachment].each do |model|
   model.send(:include, ActiveModel::Serialization)
+  model.send(:define_method, :id) { 1 }
 end
 
 SERIALIZABLE = Message.new(
@@ -42,6 +49,11 @@ SERIALIZABLE = Message.new(
   ],
   Time.parse("2011-10-29T20:45:28-05:00"),
   Time.parse("2011-10-29T20:45:28-05:00"),
+
+  # Attributes required by FastJsonapi
+  1,
+  [2, 3],
+  [5, 6],
 )
 
 class WithGranola
@@ -121,12 +133,53 @@ module WithActiveModel
   end
 end
 
+module WithFastJsonApi
+  class AuthorSerializer
+    include FastJsonapi::ObjectSerializer
+    attributes :name, :email_address, :url
+  end
+
+  class CommentSerializer
+    include FastJsonapi::ObjectSerializer
+    attributes :content, :created_at
+
+    def created_at
+      object.created_at.iso8601
+    end
+  end
+
+  class AttachmentSerializer
+    include FastJsonapi::ObjectSerializer
+    attributes :filename, :url
+  end
+
+  class MessageSerializer
+    include FastJsonapi::ObjectSerializer
+    attributes :content, :created_at, :updated_at, :visitors
+    has_one :author, serializer: AuthorSerializer
+    has_many :comments, serializer: CommentSerializer
+    has_many :attachments, serializer: AttachmentSerializer
+
+    def created_at
+      object.created_at.iso8601
+    end
+
+    def updated_at
+      object.updated_at.iso8601
+    end
+  end
+end
+
 def granola(message)
   WithGranola::MessageSerializer.new(message).to_json
 end
 
 def active_model(message)
   WithActiveModel::MessageSerializer.new(message).to_json
+end
+
+def fast_jsonapi(message)
+  WithFastJsonApi::MessageSerializer.new(message).serialized_json
 end
 
 def jbuilder(message)
@@ -154,6 +207,7 @@ end
 Benchmark.ips do |b|
   b.report("jbuilder") { jbuilder(SERIALIZABLE) }
   b.report("active_model") { active_model(SERIALIZABLE) }
-  b.report("granola")  { granola(SERIALIZABLE) }
+  b.report("fast_jsonapi") { fast_jsonapi(SERIALIZABLE) }
+  b.report("granola") { granola(SERIALIZABLE) }
   b.compare!
 end
