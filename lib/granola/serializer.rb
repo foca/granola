@@ -50,6 +50,17 @@ module Granola
     # Returns a Time or `nil`, indicating that no Last-Modified should be sent.
     def last_modified
     end
+
+    # Public: Returns the serializer in the final form before rendering. By
+    # default just returns `self`. This can be used as an extension point to
+    # wrap a serializer with root keys, such as a top-level "results" or adding
+    # like pagination-related information or other meta-information to
+    # serialized objects.
+    #
+    # Returns a Granola::Serializer.
+    def to_serializer
+      self
+    end
   end
 
   # Internal: The List serializer provides an interface for serializing lists of
